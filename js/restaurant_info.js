@@ -16,13 +16,13 @@ initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {      
-      self.newMap = L.map('map', {
+      self.newMap = L.map('restaurant-map', {
         center: [restaurant.latlng.lat, restaurant.latlng.lng],
         zoom: 16,
         scrollWheelZoom: false
       });
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-        mapboxToken: '<your MAPBOX API KEY HERE>',
+        mapboxToken: 'pk.eyJ1IjoiZnVyeW1hcCIsImEiOiJjamlqM3pzY2wxamJ3M3BuN2s4amxidGNoIn0.FS87odri4-ppmZ0K_br1iw',
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
           '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -88,6 +88,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
+  image.alt = restaurant.name;
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -136,35 +137,43 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
-  const ul = document.getElementById('reviews-list');
+  const reviewList = document.getElementById('reviews-list');
   reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+    reviewList.appendChild(createReviewHTML(review));
   });
-  container.appendChild(ul);
+  container.appendChild(reviewList);
 }
 
 /**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
-  const li = document.createElement('li');
-  const name = document.createElement('p');
+  const div = document.createElement('div');
+  div.className = 'review';
+  const reviewHeader = document.createElement('div');
+  reviewHeader.className = 'review-header';
+  div.appendChild(reviewHeader);
+
+  const name = document.createElement('div');
+  name.className = 'reviewer-name';
   name.innerHTML = review.name;
-  li.appendChild(name);
+  reviewHeader.appendChild(name);
 
-  const date = document.createElement('p');
+  const date = document.createElement('div');
+  date.className = 'review-date';
   date.innerHTML = review.date;
-  li.appendChild(date);
+  reviewHeader.appendChild(date);
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  // const rating = document.createElement('div');
+  // rating.innerHTML = `Rating: ${review.rating}`;
+  // div.appendChild(rating);
 
-  const comments = document.createElement('p');
+  const comments = document.createElement('div');
+  comments.className = 'review-content';
   comments.innerHTML = review.comments;
-  li.appendChild(comments);
+  div.appendChild(comments);
 
-  return li;
+  return div;
 }
 
 /**
